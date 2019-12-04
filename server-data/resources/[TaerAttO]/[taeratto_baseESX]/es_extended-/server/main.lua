@@ -24,17 +24,19 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 		-- Get accounts
 		table.insert(tasks, function(cb)
-			MySQL.Async.fetchAll('SELECT name, money FROM user_accounts WHERE identifier = @identifier', {
+			MySQL.Async.fetchAll('SELECT * FROM user_accounts WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(accounts)
-				local validAccounts = ESX.Table.Set(Config.Accounts)
-				for k,v in ipairs(accounts) do
-					if validAccounts[v.name] then
-						table.insert(userData.accounts, {
-							name  = v.name,
-							money = v.money,
-							label = Config.AccountLabels[v.name]
-						})
+				for i=1, #Config.Accounts, 1 do
+					for j=1, #accounts, 1 do
+						if accounts[j].name == Config.Accounts[i] then
+							table.insert(userData.accounts, {
+								name  = accounts[j].name,
+								money = accounts[j].money,
+								label = Config.AccountLabels[accounts[j].name]
+							})
+							break
+						end
 					end
 				end
 
@@ -48,14 +50,12 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 			MySQL.Async.fetchAll('SELECT item, count FROM user_inventory WHERE identifier = @identifier', {
 				['@identifier'] = player.getIdentifier()
 			}, function(inventory)
-				local tasks2, foundItems = {}, {}
+				local tasks2 = {}
 
 				for k,v in ipairs(inventory) do
 					local item = ESX.Items[v.item]
 
 					if item then
-						foundItems[v.item] = true
-
 						table.insert(userData.inventory, {
 							name = v.item,
 							count = v.count,
@@ -70,16 +70,25 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 					end
 				end
 
-				for itemName,item in pairs(ESX.Items) do
-					if not foundItems[itemName] then
+				for k,v in pairs(ESX.Items) do
+					local found = false
+
+					for j=1, #userData.inventory do
+						if userData.inventory[j].name == k then
+							found = true
+							break
+						end
+					end
+
+					if not found then
 						table.insert(userData.inventory, {
-							name = itemName,
+							name = k,
 							count = 0,
-							label = item.label,
-							weight = item.weight,
-							usable = ESX.UsableItemsCallbacks[itemName] ~= nil,
-							rare = item.rare,
-							canRemove = item.canRemove
+							label = ESX.Items[k].label,
+							weight = ESX.Items[k].weight,
+							usable = ESX.UsableItemsCallbacks[k] ~= nil,
+							rare = ESX.Items[k].rare,
+							canRemove = ESX.Items[k].canRemove
 						})
 
 						local scope = function(item, identifier)
@@ -94,8 +103,9 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 							end)
 						end
 
-						scope(itemName, player.getIdentifier())
+						scope(k, player.getIdentifier())
 					end
+
 				end
 
 				Async.parallelLimit(tasks2, 5, function(results) end)
@@ -142,7 +152,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 						if gradeObject.skin_male ~= nil then
 							userData.job.skin_male = json.decode(gradeObject.skin_male)
 						end
-
+			
 						if gradeObject.skin_female ~= nil then
 							userData.job.skin_female = json.decode(gradeObject.skin_female)
 						end
@@ -157,12 +167,12 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 						userData.job.id    = jobObject.id
 						userData.job.name  = jobObject.name
 						userData.job.label = jobObject.label
-
+			
 						userData.job.grade        = tonumber(grade)
 						userData.job.grade_name   = gradeObject.name
 						userData.job.grade_label  = gradeObject.label
 						userData.job.grade_salary = gradeObject.salary
-
+			
 						userData.job.skin_male    = {}
 						userData.job.skin_female  = {}
 					end
@@ -197,6 +207,7 @@ AddEventHandler('es:playerLoaded', function(source, _player)
 
 			xPlayer.getMissingAccounts(function(missingAccounts)
 				if #missingAccounts > 0 then
+
 					for i=1, #missingAccounts, 1 do
 						table.insert(xPlayer.accounts, {
 							name  = missingAccounts[i],
@@ -271,7 +282,7 @@ AddEventHandler('esx:giveInventoryItem', function(target, type, itemName, itemCo
 			if targetXPlayer.canCarryItem(itemName, itemCount) then
 				sourceXPlayer.removeInventoryItem(itemName, itemCount)
 				targetXPlayer.addInventoryItem   (itemName, itemCount)
-
+				
 				sourceXPlayer.showNotification(_U('gave_item', itemCount, sourceItem.label, targetXPlayer.name))
 				targetXPlayer.showNotification(_U('received_item', itemCount, sourceItem.label, sourceXPlayer.name))
 			else
