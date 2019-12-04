@@ -557,7 +557,7 @@ function addToInventory(item, type, inventory)
     local max = 100
     local toAdd = item.count
     while toAdd > 0 do
-        toAdd = AttemptMerge(item, inventory, toAdd, max)
+        -- toAdd = AttemptMerge(item, inventory, toAdd, max)
         if toAdd > 0 then
             toAdd = AddToEmpty(item, type, inventory, toAdd, max)
         else
@@ -595,6 +595,7 @@ function AddToEmpty(item, type, inventory, count)
                 return count - max
             else
                 inventory[tostring(i)] = item
+                inventory[tostring(i)].count = count
                 return 0
             end
         end
