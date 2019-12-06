@@ -44,7 +44,7 @@ menuConfigs = {
     },
     ['personal'] = {                                  -- Example menu for emotes when player is on foot
         enableMenu = function()                     -- Function to enable/disable menu handling
-            local player = GetPlayerPed(-1)
+            local player = PlayerPedId() --GetPlayerPed(-1)
             return IsPedOnFoot(player)
         end,
         data = {                                    -- Data that is passed to Javascript
@@ -72,7 +72,7 @@ menuConfigs = {
                     minRadiusPercent = 0.3,         -- Minimum radius of wheel in percentage
                     maxRadiusPercent = 0.6,         -- Maximum radius of wheel in percentage
                     labels = {"imgsrc:smartphone.png", "imgsrc:backpack.png", "imgsrc:barbielyftupp.png", "imgsrc:remotekey.png", "imgsrc:closet.png"},
-                    commands = {"phone", "backpack", "barbielyftupp", "togglelock", "closetoutfit"}
+                    commands = {"phone", "backpack", "interactions", "togglelock", "closetoutfit"} --barbielyftupp
                 },
                 --[[{
                     navAngle = 285,                 -- Oritentation of wheel
@@ -86,7 +86,7 @@ menuConfigs = {
     },
     ['vehicles'] = {                                -- Example menu for vehicle controls when player is in a vehicle
         enableMenu = function()                     -- Function to enable/disable menu handling
-            local player = GetPlayerPed(-1)
+            local player = PlayerPedId() --GetPlayerPed(-1)
             return IsPedInAnyVehicle(player, false)
         end,
         data = {                                    -- Data that is passed to Javascript
@@ -152,7 +152,7 @@ subMenuConfigs = {
                       "imgsrc:smartphone.png", "imgsrc:backpack.png", "imgsrc:barbielyftupp.png", "imgsrc:remotekey.png", "imgsrc:closet.png"
                        -- "imgsrc:car.png", "imgsrc:trunk.png", "imgsrc:key.png"
                      },
-                    commands = {"togglephone", "toggleinventoryhud", "barbielyftupp", "vehicledoorlock", "closetoutfit"
+                    commands = {"togglephone", "toggleinventoryhud", "interactions", "vehicledoorlock", "closetoutfit"
                      -- "test", "toggleinventoryhudtrunk", "doorvehiclelock"
                    }
                 },
@@ -162,6 +162,49 @@ subMenuConfigs = {
                     maxRadiusPercent = 1.0,
                     labels = {"imgsrc:jacket.png", "imgsrc:clothes.png", "imgsrc:sneaker.png", "imgsrc:theatre.png", "imgsrc:glasses.png", "imgsrc:earrings.png", "imgsrc:refresh.png", "imgsrc:helmet.png"},
                     commands = {"jacket", "pants", "shoe", "mask", "glasses", "earrings", "ubie", "helmet"}
+                }
+            }
+        }
+    },
+    ['interactions'] = {
+        data = {
+            keybind = "F1",
+            style = {                               -- Wheel style settings
+                sizePx = 600,                       -- Wheel size in pixels
+                slices = {                          -- Slice style settings
+                    default = { ['fill'] = '#000000', ['stroke'] = '#000000', ['stroke-width'] = 2, ['opacity'] = 0.60 },
+                    hover = { ['fill'] = '#ff8000', ['stroke'] = '#000000', ['stroke-width'] = 2, ['opacity'] = 0.80 },
+                    selected = { ['fill'] = '#ff8000', ['stroke'] = '#000000', ['stroke-width'] = 2, ['opacity'] = 0.80 }
+                },
+                titles = {                          -- Text style settings
+                    default = { ['fill'] = '#ffffff', ['stroke'] = 'none', ['font'] = 'Helvetica', ['font-size'] = 16, ['font-weight'] = 'bold' },
+                    hover = { ['fill'] = '#ffffff', ['stroke'] = 'none', ['font'] = 'Helvetica', ['font-size'] = 16, ['font-weight'] = 'bold' },
+                    selected = { ['fill'] = '#ffffff', ['stroke'] = 'none', ['font'] = 'Helvetica', ['font-size'] = 16, ['font-weight'] = 'bold' }
+                },
+                icons = {
+                    width = 64,
+                    height = 64
+                }
+            },
+            wheels = {
+                {
+                    navAngle = 270,                 -- Oritentation of wheel
+                    minRadiusPercent = 0.3,         -- Minimum radius of wheel in percentage
+                    maxRadiusPercent = 0.6,         -- Maximum radius of wheel in percentage
+                    labels = {
+                      "imgsrc:smartphone.png", "imgsrc:backpack.png", "imgsrc:barbielyftupp.png", "imgsrc:remotekey.png", "imgsrc:closet.png"
+                       -- "imgsrc:car.png", "imgsrc:trunk.png", "imgsrc:key.png"
+                     },
+                    commands = {"togglephone", "toggleinventoryhud", "interactions", "vehicledoorlock", "closetoutfit"
+                     -- "test", "toggleinventoryhudtrunk", "doorvehiclelock"
+                   }
+                },
+                {
+                    navAngle = 270,
+                    minRadiusPercent = 0.7,
+                    maxRadiusPercent = 1.0,
+                    labels = {"barbie", "carry", "piggyback"},
+                    commands = {"barbielyftupp", "carry", "piggyback"}
                 }
             }
         }

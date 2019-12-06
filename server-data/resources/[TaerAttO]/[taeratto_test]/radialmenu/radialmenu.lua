@@ -58,6 +58,20 @@ RegisterCommand("closetoutfit", function(source, args, rawCommand)
     SetNuiFocus(true, true)
 end, false)
 
+RegisterCommand('interactions', function(source, args, rawCommand)
+    -- Wait for next frame just to be safe
+    Citizen.Wait(0)
+
+    -- Init UI and set focus
+    showMenu = true
+    SendNUIMessage({
+        type = 'init',
+        data = subMenuConfigs["interactions"].data,
+        resourceName = GetCurrentResourceName()
+    })
+    SetNuiFocus(true, true)
+end, false)
+
 -- Callback function for closing menu
 RegisterNUICallback('closemenu', function(data, cb)
     -- Clear focus and destroy UI
