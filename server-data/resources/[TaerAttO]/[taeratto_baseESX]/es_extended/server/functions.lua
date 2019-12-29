@@ -41,36 +41,36 @@ ESX.SavePlayer = function(xPlayer, cb)
 	xPlayer.setLastPosition(xPlayer.getCoords())
 
 	-- User accounts
-	for k,v in ipairs(xPlayer.accounts) do
-		if ESX.LastPlayerData[xPlayer.source].accounts[v.name] ~= v.money then
+	for i=1, #xPlayer.accounts, 1 do
+		if ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] ~= xPlayer.accounts[i].money then
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_accounts SET money = @money WHERE identifier = @identifier AND name = @name', {
-					['@money']      = v.money,
+					['@money']      = xPlayer.accounts[i].money,
 					['@identifier'] = xPlayer.identifier,
-					['@name']       = v.name
+					['@name']       = xPlayer.accounts[i].name
 				}, function(rowsChanged)
 					cb()
 				end)
 			end)
 
-			ESX.LastPlayerData[xPlayer.source].accounts[v.name] = v.money
+			ESX.LastPlayerData[xPlayer.source].accounts[xPlayer.accounts[i].name] = xPlayer.accounts[i].money
 		end
 	end
 
 	-- Inventory items
-	for k,v in ipairs(xPlayer.inventory) do
-		if ESX.LastPlayerData[xPlayer.source].items[v.name] ~= v.count then
+	for i=1, #xPlayer.inventory, 1 do
+		if ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] ~= xPlayer.inventory[i].count then
 			table.insert(asyncTasks, function(cb)
 				MySQL.Async.execute('UPDATE user_inventory SET count = @count WHERE identifier = @identifier AND item = @item', {
-					['@count']      = v.count,
+					['@count']      = xPlayer.inventory[i].count,
 					['@identifier'] = xPlayer.identifier,
-					['@item']       = v.name
+					['@item']       = xPlayer.inventory[i].name
 				}, function(rowsChanged)
 					cb()
 				end)
 			end)
 
-			ESX.LastPlayerData[xPlayer.source].items[v.name] = v.count
+			ESX.LastPlayerData[xPlayer.source].items[xPlayer.inventory[i].name] = xPlayer.inventory[i].count
 		end
 	end
 
@@ -134,6 +134,7 @@ ESX.GetPlayers = function()
 
 	return sources
 end
+
 
 ESX.GetPlayerFromId = function(source)
 	return ESX.Players[tonumber(source)]

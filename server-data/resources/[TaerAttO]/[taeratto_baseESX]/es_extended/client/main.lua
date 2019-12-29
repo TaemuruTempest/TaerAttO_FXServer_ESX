@@ -478,15 +478,15 @@ Citizen.CreateThread(function()
 end)
 
 -- Menu interactions
--- Citizen.CreateThread(function()
--- 	while true do
--- 		Citizen.Wait(0)
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
 
--- 		if IsControlJustReleased(0, 289) and IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
--- 			ESX.ShowInventory()
--- 		end
--- 	end
--- end)
+		if IsControlJustReleased(0, 289) and IsInputDisabled(0) and not isDead and not ESX.UI.Menu.IsOpen('default', 'es_extended', 'inventory') then
+			ESX.ShowInventory()
+		end
+	end
+end)
 
 -- Disable wanted level
 if Config.DisableWantedLevel then
