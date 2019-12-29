@@ -3,7 +3,7 @@
 
  # discord
 
- [Secret] (https://discord.gg/T2BW7Ft)
+ [Secret](https://discord.gg/T2BW7Ft)
 
  # Create DATABASE or RUN NewESX.sql
 
