@@ -1,6 +1,10 @@
 # TaerAttO_FXServer_ESX
  New ESX Version
 
+ # discord
+
+ [Secret] (https://discord.gg/T2BW7Ft)
+
  # Create DATABASE or RUN NewESX.sql
 
  1. Create db name `monster_taeratto` or execute sql NewESX.sql
